@@ -14,7 +14,7 @@ export function AppHeader({
   member: Member;
   email: string;
 }) {
-  const displayName = member.display_name?.trim() || email.split("@")[0] || "사용자";
+  const displayName = member.name?.trim() || email.split("@")[0] || "사용자";
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6">

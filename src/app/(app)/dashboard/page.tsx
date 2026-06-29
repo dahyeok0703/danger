@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "홈" };
 
 export default async function DashboardPage() {
   const { member, workspace } = await getCurrentContext();
-  const name = member.display_name?.trim() || ROLE_LABELS[member.role];
+  const name = member.name?.trim() || ROLE_LABELS[member.role];
 
   return (
     <div className="space-y-6">

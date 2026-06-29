@@ -62,9 +62,38 @@ pnpm dlx supabase db push
 
 적용 후 생성되는 것:
 
-- `workspaces`(사업장), `members`(직원) 테이블
-- `workspace_id` 기준 **RLS 정책** (테넌트 데이터 격리)
+- 테넌트 테이블: `workspaces`, `members`, `worksites`(작업장소/공정), `hazards`(유해위험요인),
+  `risk_assessments`(위험성평가), `assessment_items`(평가항목), `safety_records`(안전활동기록),
+  `documents`(산출물), `reminders`(일정), `ai_usage`, `audit_logs`, `billing_events`
+- 모든 테넌트 테이블에 `workspace_id` + **RLS 정책** (테넌트 데이터 격리)
+  - 역할: `owner`/`manager` 전체 CRUD, `worker` 읽기 + 제한적 쓰기,
+    `ai_usage`·`billing_events`·`audit_logs` 는 owner 만 열람
+  - ★ `likelihood`/`severity`/`risk_level` 은 **사용자가 직접 선택한 값**이며 시스템이 산정하지 않습니다.
 - `handle_new_user` 트리거 — 회원가입 시 사업장 + 대표(owner) 자동 생성
+
+### 데모 시드 데이터
+
+`supabase/seed.sql` 에 데모 사업장(작업장소 2, 위험요인 5, 위험성평가 1)이 들어 있습니다.
+`supabase db reset` 시 자동 실행됩니다. members(로그인 계정)는 포함되지 않으므로,
+앱 화면에서 보려면 로그인한 뒤 본인 계정을 데모 사업장 member 로 연결하세요:
+
+```sql
+-- 예시: 내 계정을 데모 사업장(owner)으로 연결
+insert into public.members (workspace_id, user_id, role, status, name)
+values ('00000000-0000-0000-0000-0000000000d0', auth.uid(), 'owner', 'active', '데모 관리자');
+```
+
+> RLS 때문에 데모 데이터는 연결된 사업장 소속 사용자에게만 보입니다(격리가 정상 동작).
+
+### RLS 통합 테스트 (격리 검증)
+
+```bash
+supabase start        # 로컬 스택 기동 (Docker 필요)
+supabase test db      # supabase/tests/*.test.sql (pgTAP) 실행
+```
+
+`supabase/tests/rls_isolation.test.sql` 는 사업장 A/B 와 역할(owner/manager/worker)을 만들어
+**타 workspace 데이터가 보이지 않는지**, **역할별 쓰기 권한**이 맞는지(총 13개 assertion)를 검증합니다.
 
 ## Auth 설정 (Supabase 대시보드)
 
@@ -84,6 +113,16 @@ pnpm dlx supabase db push
 | `SUPABASE_SERVICE_ROLE_KEY` | ⬜ | 서버 전용 관리 키. **절대 클라이언트 노출 금지**. 현재 골격 미사용 |
 
 환경변수는 시작 시 `src/lib/env.ts` 에서 **zod 로 검증**합니다. 값이 빠지면 명확한 오류로 멈춥니다.
+
+### DB 타입 재생성
+
+스키마를 바꾸면 TypeScript 타입(`src/types/database.ts`)을 재생성하세요:
+
+```bash
+supabase gen types typescript --local > src/types/database.ts          # 로컬 스택
+# 또는
+supabase gen types typescript --project-id <ref> > src/types/database.ts  # 원격
+```
 
 ## 스크립트
 

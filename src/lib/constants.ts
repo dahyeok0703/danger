@@ -17,13 +17,13 @@ export const DISCLAIMER_LONG =
 /** 멤버 역할 표시명 */
 export const ROLE_LABELS: Record<MemberRole, string> = {
   owner: "대표",
-  admin: "관리자",
-  staff: "직원",
+  manager: "관리자",
+  worker: "직원",
 };
 
 /** 권한 등급 (숫자가 클수록 높은 권한) */
 export const ROLE_RANK: Record<MemberRole, number> = {
-  staff: 1,
-  admin: 2,
+  worker: 1,
+  manager: 2,
   owner: 3,
 };

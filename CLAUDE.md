@@ -32,8 +32,9 @@
 ## 멀티테넌시 & 보안 모델
 
 ```
-workspace(사업장) ──< member(직원: owner/admin/staff) 
-        └──< 위험성평가 · 기록 (workspace_id 로 격리)
+workspace(사업장) ──< member(직원: owner/manager/worker)
+        └──< worksites · hazards · risk_assessments · safety_records …
+             (전부 workspace_id + RLS 로 격리)
 ```
 
 - **데이터 격리의 단일 원칙: `workspace_id` + Postgres RLS.**
@@ -41,7 +42,9 @@ workspace(사업장) ──< member(직원: owner/admin/staff)
   - 애플리케이션 코드의 `where` 필터에 의존하지 말 것. **RLS 가 최종 방어선**이다.
   - RLS 정책 내 재귀를 막기 위해 `auth_workspace_ids()` / `auth_has_role()`
     SECURITY DEFINER 헬퍼를 사용한다 (`supabase/migrations/0001_init.sql`).
-- 역할: `owner`(대표) · `admin`(관리자) · `staff`(직원). 표시명·권한등급은 `src/lib/constants.ts`.
+- 역할: `owner`(대표) · `manager`(관리자) · `worker`(직원). owner·manager 는 전체 CRUD,
+  worker 는 읽기 + 제한적 쓰기(안전기록 등록·평가항목 갱신). `ai_usage`·`billing_events`·`audit_logs`
+  는 owner 만 열람. 표시명·권한등급은 `src/lib/constants.ts`.
 - 인가 판단은 항상 `supabase.auth.getUser()` (Auth 서버 검증) 로 한다. `getSession()` 으로 인가하지 말 것.
 - 회원가입 시 `auth.users` 트리거(`handle_new_user`)가 사업장 + 대표(owner) 멤버를 자동 생성한다.
 

@@ -23,9 +23,14 @@ export default async function SettingsPage() {
         <CardContent className="space-y-3 text-sm">
           <Row label="사업장 이름" value={workspace.name} />
           <Separator />
-          <Row label="사업자등록번호" value={workspace.business_number ?? "미입력"} />
+          <Row label="사업자등록번호" value={workspace.business_no ?? "미입력"} />
           <Separator />
           <Row label="업종" value={workspace.industry ?? "미입력"} />
+          <Separator />
+          <Row
+            label="상시근로자수"
+            value={workspace.worker_count != null ? `${workspace.worker_count}명` : "미입력"}
+          />
         </CardContent>
       </Card>
 
@@ -34,7 +39,7 @@ export default async function SettingsPage() {
           <CardTitle className="text-base">내 정보</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <Row label="이름" value={member.display_name ?? "미입력"} />
+          <Row label="이름" value={member.name ?? "미입력"} />
           <Separator />
           <Row label="역할" value={ROLE_LABELS[member.role]} />
         </CardContent>
