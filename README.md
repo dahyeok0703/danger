@@ -92,8 +92,10 @@ supabase start        # 로컬 스택 기동 (Docker 필요)
 supabase test db      # supabase/tests/*.test.sql (pgTAP) 실행
 ```
 
-`supabase/tests/rls_isolation.test.sql` 는 사업장 A/B 와 역할(owner/manager/worker)을 만들어
-**타 workspace 데이터가 보이지 않는지**, **역할별 쓰기 권한**이 맞는지(총 13개 assertion)를 검증합니다.
+- `supabase/tests/rls_isolation.test.sql` — 사업장 A/B + 역할로 **타 workspace 격리**와
+  **역할별 쓰기 권한**을 검증 (13 assertion)
+- `supabase/tests/audit_invite.test.sql` — **감사 로그 기록 함수**(위조 방지)와
+  **직원 초대 → 가입 시 자동 합류**를 검증 (5 assertion)
 
 ## Auth 설정 (Supabase 대시보드)
 
@@ -152,9 +154,18 @@ middleware.ts     세션 갱신 + 라우트 보호
 
 자세한 개발 규칙·설계 원칙은 [`CLAUDE.md`](./CLAUDE.md) 참고.
 
-## 다음 단계 (골격 이후)
+## 구현된 흐름
+
+- **온보딩**(`/onboarding`): 업종·상시근로자수·주요 작업/공정 입력 → 작업장소 자동 생성,
+  중대재해처벌법 **일반 안내**(법적 판정 아님, 전문가·관계기관 확인 문구 명시). 미완료 시 `(app)` 진입을 가로채 온보딩으로 보냄.
+- **작업장소**(`/worksites`): 평가 단위 등록/수정/삭제(소프트 삭제), 모바일 카드 레이아웃.
+- **설정**(`/settings`): 사업장 정보 수정, 직원 역할 관리, **이메일 초대**(가입 시 자동 합류).
+- **대시보드**(`/dashboard`): 다음 위험성평가 예정일·미완료 항목·임박한 점검 요약(후속 스테이지 연결점).
+- **소프트 삭제**(`deleted_at`)와 **감사 로그**(`write_audit_log` RPC)를 쓰기 작업에 적용.
+
+## 다음 단계
 
 - 위험성평가 작성 플로우(작업 → 유해위험요인 → 개선대책 기록)
 - 기록 보관/내보내기(PDF), Storage 첨부
-- 직원 초대·권한 관리
+- 초대 수락 전용 화면(가입 UX) 연결
 - KOSHA 기반 예시 데이터(전문가 검수 후 반영)

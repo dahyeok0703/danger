@@ -17,8 +17,12 @@ export type SafetyRecordType = "education" | "inspection" | "meeting" | "improve
 export type DocumentKind = "assessment_table" | "safety_policy" | "checklist" | "other";
 export type ReminderTarget = "assessment" | "record";
 export type ReminderStatus = "pending" | "done";
+export type InvitationStatus = "pending" | "accepted" | "revoked";
+
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 type Timestamps = { created_at: string; updated_at: string };
+type SoftDelete = { deleted_at: string | null };
 
 export interface Database {
   public: {
@@ -33,7 +37,9 @@ export interface Database {
           plan: PlanTier;
           trial_ends_at: string | null;
           billing_customer_id: string | null;
-        } & Timestamps;
+          onboarded_at: string | null;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           name: string;
@@ -43,8 +49,10 @@ export interface Database {
           plan?: PlanTier;
           trial_ends_at?: string | null;
           billing_customer_id?: string | null;
+          onboarded_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["workspaces"]["Insert"]>;
         Relationships: [];
@@ -57,7 +65,8 @@ export interface Database {
           name: string | null;
           role: MemberRole;
           status: MemberStatus;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -67,6 +76,7 @@ export interface Database {
           status?: MemberStatus;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["members"]["Insert"]>;
         Relationships: [
@@ -84,7 +94,8 @@ export interface Database {
           workspace_id: string;
           name: string;
           description: string | null;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -92,6 +103,7 @@ export interface Database {
           description?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["worksites"]["Insert"]>;
         Relationships: [
@@ -111,7 +123,8 @@ export interface Database {
           category: string | null;
           description: string;
           source: HazardSource;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -121,6 +134,7 @@ export interface Database {
           source?: HazardSource;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["hazards"]["Insert"]>;
         Relationships: [
@@ -143,7 +157,8 @@ export interface Database {
           assessor_member_id: string | null;
           next_due_on: string | null;
           memo: string | null;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -156,6 +171,7 @@ export interface Database {
           memo?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["risk_assessments"]["Insert"]>;
         Relationships: [
@@ -183,7 +199,8 @@ export interface Database {
           owner: string | null;
           due_on: string | null;
           done: boolean;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -198,6 +215,7 @@ export interface Database {
           done?: boolean;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["assessment_items"]["Insert"]>;
         Relationships: [
@@ -218,7 +236,8 @@ export interface Database {
           recorded_on: string | null;
           file_path: string | null;
           memo: string | null;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -229,6 +248,7 @@ export interface Database {
           memo?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["safety_records"]["Insert"]>;
         Relationships: [
@@ -248,7 +268,8 @@ export interface Database {
           title: string | null;
           file_path: string | null;
           generated_from: Json | null;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -258,6 +279,7 @@ export interface Database {
           generated_from?: Json | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["documents"]["Insert"]>;
         Relationships: [
@@ -278,7 +300,8 @@ export interface Database {
           due_on: string;
           status: ReminderStatus;
           label: string | null;
-        } & Timestamps;
+        } & Timestamps &
+          SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
@@ -289,11 +312,47 @@ export interface Database {
           label?: string | null;
           created_at?: string;
           updated_at?: string;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["reminders"]["Insert"]>;
         Relationships: [
           {
             foreignKeyName: "reminders_workspace_id_fkey";
+            columns: ["workspace_id"];
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      invitations: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          email: string;
+          role: MemberRole;
+          status: InvitationStatus;
+          invited_by_member_id: string | null;
+          token: string;
+          expires_at: string;
+        } & Timestamps &
+          SoftDelete;
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          email: string;
+          role?: MemberRole;
+          status?: InvitationStatus;
+          invited_by_member_id?: string | null;
+          token?: string;
+          expires_at?: string;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["invitations"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "invitations_workspace_id_fkey";
             columns: ["workspace_id"];
             referencedRelation: "workspaces";
             referencedColumns: ["id"];
@@ -389,7 +448,18 @@ export interface Database {
       };
     };
     Views: Record<never, never>;
-    Functions: Record<never, never>;
+    Functions: {
+      write_audit_log: {
+        Args: {
+          p_workspace_id: string;
+          p_action: string;
+          p_target_table?: string | null;
+          p_target_id?: string | null;
+          p_meta?: Json | null;
+        };
+        Returns: string;
+      };
+    };
     Enums: {
       member_role: MemberRole;
       member_status: MemberStatus;
@@ -401,12 +471,11 @@ export interface Database {
       document_kind: DocumentKind;
       reminder_target: ReminderTarget;
       reminder_status: ReminderStatus;
+      invitation_status: InvitationStatus;
     };
     CompositeTypes: Record<never, never>;
   };
 }
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 /** 편의 행 타입 별칭 */
 type Tables = Database["public"]["Tables"];
@@ -419,6 +488,7 @@ export type AssessmentItem = Tables["assessment_items"]["Row"];
 export type SafetyRecord = Tables["safety_records"]["Row"];
 export type AppDocument = Tables["documents"]["Row"];
 export type Reminder = Tables["reminders"]["Row"];
+export type Invitation = Tables["invitations"]["Row"];
 export type AiUsage = Tables["ai_usage"]["Row"];
 export type AuditLog = Tables["audit_logs"]["Row"];
 export type BillingEvent = Tables["billing_events"]["Row"];

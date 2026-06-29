@@ -1,5 +1,12 @@
 import type { Route } from "next";
-import { ClipboardCheck, FileText, LayoutDashboard, Settings, type LucideIcon } from "lucide-react";
+import {
+  ClipboardCheck,
+  FileText,
+  LayoutDashboard,
+  MapPin,
+  Settings,
+  type LucideIcon,
+} from "lucide-react";
 
 export interface NavItem {
   href: Route;
@@ -16,6 +23,12 @@ export const NAV_ITEMS: NavItem[] = [
     label: "홈",
     hint: "오늘 할 일과 현황을 한눈에",
     icon: LayoutDashboard,
+  },
+  {
+    href: "/worksites",
+    label: "작업장소",
+    hint: "평가할 작업/공정 단위 관리",
+    icon: MapPin,
   },
   {
     href: "/assessments",

@@ -72,6 +72,12 @@ workspace(사업장) ──< member(직원: owner/manager/worker)
   - 클라이언트 컴포넌트: `src/lib/supabase/client.ts`
   - 미들웨어: `src/lib/supabase/middleware.ts`
 - **DB 타입**: `src/types/database.ts`. 운영에서는 `supabase gen types` 로 재생성 권장.
+- **소프트 삭제**: 콘텐츠 테이블은 `deleted_at` 으로 소프트 삭제한다. 조회 시 `.is("deleted_at", null)`
+  필터를 건다. 소프트 삭제된 멤버는 `auth_workspace_ids()`/`auth_has_role()` 에서 권한이 빠진다.
+- **감사 로그**: 쓰기성 server action 은 `src/lib/audit.ts` 의 `logAudit()`(= `write_audit_log` RPC)
+  로 기록을 남긴다. `audit_logs` 는 직접 INSERT 불가(SECURITY DEFINER 함수만), owner 만 열람.
+- **직원 초대**: `invitations` 테이블에 이메일로 초대하면, 해당 이메일로 가입 시 `handle_new_user`
+  트리거가 자동으로 member 로 합류시킨다. 초대 관리는 owner·manager 만.
 
 ## 디자인 토큰 (Single Source of Truth)
 

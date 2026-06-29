@@ -27,3 +27,40 @@ export const ROLE_RANK: Record<MemberRole, number> = {
   manager: 2,
   owner: 3,
 };
+
+/** 업종 선택지 (KOSHA 분류 참고, 단순화) */
+export const INDUSTRY_OPTIONS = [
+  "제조업",
+  "건설업",
+  "금속가공",
+  "기계·장비",
+  "화학·플라스틱",
+  "식품 제조",
+  "운수·창고",
+  "도소매업",
+  "기타 서비스",
+] as const;
+
+/**
+ * 중대재해처벌법 '일반 안내'용 기준 인원.
+ * ⚠️ 법적 판정이 아니다. 2024.1.27 부터 상시근로자 5명 이상 사업장으로 확대되었다는
+ * 일반 정보를 바탕으로 한 안내일 뿐이며, 정확한 적용 여부는 전문가·관계기관 확인이 필요하다.
+ */
+export const SERIOUS_ACCIDENTS_ACT_MIN_WORKERS = 5;
+
+/** 온보딩에서 입력하는 안내 메시지 분기 (판정 아님, 일반 안내) */
+export function actGuidance(workerCount: number | null): {
+  tone: "applies" | "check";
+  headline: string;
+} {
+  if (workerCount != null && workerCount >= SERIOUS_ACCIDENTS_ACT_MIN_WORKERS) {
+    return {
+      tone: "applies",
+      headline: "중대재해처벌법 적용 대상에 해당할 수 있습니다",
+    };
+  }
+  return {
+    tone: "check",
+    headline: "중대재해처벌법 적용 여부를 확인해 보세요",
+  };
+}

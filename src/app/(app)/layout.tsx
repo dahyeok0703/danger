@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { getCurrentContext, requireUser } from "@/lib/auth";
 import { AppHeader } from "@/components/app-shell/app-header";
 import { MobileNav } from "@/components/app-shell/mobile-nav";
@@ -6,11 +8,16 @@ import { Sidebar } from "@/components/app-shell/sidebar";
 /**
  * (app) 보호 레이아웃.
  * - 미인증 사용자는 requireUser/getCurrentContext 가 /login 으로 리다이렉트.
+ * - 온보딩 미완료면 /onboarding 으로 보낸다.
  * - 모바일 우선: 데스크톱은 사이드바, 모바일은 하단 탭바.
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
   const { member, workspace } = await getCurrentContext();
+
+  if (!workspace.onboarded_at) {
+    redirect("/onboarding");
+  }
 
   return (
     <div className="flex min-h-dvh bg-muted/30">
