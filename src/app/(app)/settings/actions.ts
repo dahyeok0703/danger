@@ -23,7 +23,10 @@ function assertOwner(role: string) {
 
 /** 사업장 정보 수정 (관리자+) */
 export const updateWorkspace = action(async (input: unknown) => {
-  const { name, businessNo, industry, workerCount } = parseInput(workspaceUpdateSchema, input);
+  const { name, businessNo, industry, workerCount, representativeName, logoUrl } = parseInput(
+    workspaceUpdateSchema,
+    input,
+  );
   const { workspace, member } = await getCurrentContext();
   assertManager(member.role);
 
@@ -35,6 +38,8 @@ export const updateWorkspace = action(async (input: unknown) => {
       business_no: businessNo || null,
       industry: industry || null,
       worker_count: workerCount ?? null,
+      representative_name: representativeName || null,
+      logo_url: logoUrl || null,
     })
     .eq("id", workspace.id);
 

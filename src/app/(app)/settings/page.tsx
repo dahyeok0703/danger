@@ -48,6 +48,8 @@ export default async function SettingsPage() {
           businessNo: workspace.business_no ?? "",
           industry: workspace.industry ?? "",
           workerCount: workspace.worker_count,
+          representativeName: workspace.representative_name ?? "",
+          logoUrl: workspace.logo_url ?? "",
         }}
       />
 

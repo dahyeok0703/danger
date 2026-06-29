@@ -33,6 +33,8 @@ export function WorkspaceInfoForm({
     businessNo: string;
     industry: string;
     workerCount: number | null;
+    representativeName: string;
+    logoUrl: string;
   };
 }) {
   const router = useRouter();
@@ -45,6 +47,8 @@ export function WorkspaceInfoForm({
       businessNo: defaultValues.businessNo,
       industry: defaultValues.industry,
       workerCount: defaultValues.workerCount ?? undefined,
+      representativeName: defaultValues.representativeName,
+      logoUrl: defaultValues.logoUrl,
     },
   });
 
@@ -150,6 +154,39 @@ export function WorkspaceInfoForm({
                       ref={field.ref}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="representativeName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>대표자 성명</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="예: 홍길동" disabled={!canManage} />
+                  </FormControl>
+                  <FormDescription>산출물(PDF) 머리글·서명란에 표시됩니다.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="logoUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>로고 이미지 주소 (선택)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      inputMode="url"
+                      placeholder="https://…/logo.png"
+                      disabled={!canManage}
+                    />
+                  </FormControl>
+                  <FormDescription>산출물 머리글에 로고로 표시됩니다.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

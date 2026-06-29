@@ -22,6 +22,13 @@ export const ASSESSMENT_DISCLAIMER =
 export const AI_SUGGESTION_DISCLAIMER =
   "AI가 제시한 예시입니다. 실제 해당 여부와 위험도는 사업주가 직접 판단합니다. AI는 위험도·법 충족 여부를 판정하지 않습니다.";
 
+/**
+ * ★ 산출물(PDF) 하단 고정 주석.
+ * 양식은 KOSHA 공개 표준을 참고했으나, 법적 정확성은 출시 전 산업안전 전문가 검수가 필요하다.
+ */
+export const DOCUMENT_FOOTER_NOTE =
+  "본 문서는 사업주가 작성한 내용을 정리한 것이며, 적법성은 보증되지 않습니다. 양식은 KOSHA 공개 표준을 참고했으며, 정확한 적법성은 산업안전 전문가의 검수가 필요합니다.";
+
 /** 멤버 역할 표시명 */
 export const ROLE_LABELS: Record<MemberRole, string> = {
   owner: "대표",

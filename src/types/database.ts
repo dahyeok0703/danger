@@ -38,6 +38,8 @@ export interface Database {
           trial_ends_at: string | null;
           billing_customer_id: string | null;
           onboarded_at: string | null;
+          representative_name: string | null;
+          logo_url: string | null;
         } & Timestamps &
           SoftDelete;
         Insert: {
@@ -50,6 +52,8 @@ export interface Database {
           trial_ends_at?: string | null;
           billing_customer_id?: string | null;
           onboarded_at?: string | null;
+          representative_name?: string | null;
+          logo_url?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;

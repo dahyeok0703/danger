@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { CalendarClock, CheckCircle2, History, Pencil, Plus } from "lucide-react";
+import { CalendarClock, CheckCircle2, FileDown, History, Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { ASSESSMENT_STATUS_LABELS, ASSESSMENT_TYPE_LABELS, NEXT_DUE_NOTE } from "@/lib/risk";
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { PdfButtons } from "@/components/pdf-buttons";
 import { HazardSuggestDialog } from "./hazard-suggest-dialog";
 import { ItemCard, type EditorItem } from "./item-card";
 
@@ -210,6 +211,25 @@ export function AssessmentEditor({
           </CardContent>
         </Card>
       )}
+
+      {/* 산출물 PDF */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <FileDown className="h-4 w-4" />
+            위험성평가표 (PDF)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <PdfButtons
+            url={`/api/documents/assessment/${assessment.id}/pdf`}
+            title={`위험성평가표 — ${assessment.worksiteName}`}
+          />
+          <p className="text-xs text-muted-foreground">
+            KOSHA 공개 표준을 참고한 서식입니다. 적법성은 보증되지 않으며 전문가 검수가 필요합니다.
+          </p>
+        </CardContent>
+      </Card>
 
       {/* 이력 */}
       {revisions.length > 0 && (

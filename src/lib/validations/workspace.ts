@@ -18,6 +18,13 @@ export const workspaceUpdateSchema = z.object({
     .min(0)
     .max(49, "이 서비스는 50인 미만 사업장을 위한 도구예요.")
     .optional(),
+  representativeName: optionalText(40),
+  logoUrl: z
+    .string()
+    .trim()
+    .url("이미지 주소(http…)를 입력해 주세요.")
+    .optional()
+    .or(z.literal("")),
 });
 
 export type WorkspaceUpdateInput = z.infer<typeof workspaceUpdateSchema>;
