@@ -14,6 +14,10 @@ export const DISCLAIMER_SHORT =
 export const DISCLAIMER_LONG =
   "본 서비스는 위험성평가의 작성·기록·정리를 돕는 보조 도구입니다. 위험도 산정, 안전 여부, 법적 적합성에 대한 판단과 책임은 전적으로 사업주에게 있으며, 시스템이나 AI 가 위험도를 판정하지 않습니다. 법령 관련 내용은 KOSHA(안전보건공단) 자료를 참고하되, 정확한 적용은 전문가의 검수를 받으시기 바랍니다.";
 
+/** 위험성평가 화면 고정 문구 (작성 화면 상단에 항상 노출) */
+export const ASSESSMENT_DISCLAIMER =
+  "위험도 판단과 최종 책임은 사업주에게 있으며, 본 도구는 작성을 보조합니다. 가능성·중대성·위험성은 사업주가 직접 선택한 값입니다.";
+
 /** 멤버 역할 표시명 */
 export const ROLE_LABELS: Record<MemberRole, string> = {
   owner: "대표",

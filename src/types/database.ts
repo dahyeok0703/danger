@@ -225,6 +225,12 @@ export interface Database {
             referencedRelation: "risk_assessments";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "assessment_items_hazard_id_fkey";
+            columns: ["hazard_id"];
+            referencedRelation: "hazards";
+            referencedColumns: ["id"];
+          },
         ];
       };
       safety_records: {
@@ -359,6 +365,39 @@ export interface Database {
           },
         ];
       };
+      assessment_revisions: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          assessment_id: string;
+          version: number;
+          status: AssessmentStatus;
+          snapshot: Json;
+          note: string | null;
+          created_by_member_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          assessment_id: string;
+          version: number;
+          status: AssessmentStatus;
+          snapshot: Json;
+          note?: string | null;
+          created_by_member_id?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["assessment_revisions"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "assessment_revisions_assessment_id_fkey";
+            columns: ["assessment_id"];
+            referencedRelation: "risk_assessments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ai_usage: {
         Row: {
           id: string;
@@ -489,6 +528,7 @@ export type SafetyRecord = Tables["safety_records"]["Row"];
 export type AppDocument = Tables["documents"]["Row"];
 export type Reminder = Tables["reminders"]["Row"];
 export type Invitation = Tables["invitations"]["Row"];
+export type AssessmentRevision = Tables["assessment_revisions"]["Row"];
 export type AiUsage = Tables["ai_usage"]["Row"];
 export type AuditLog = Tables["audit_logs"]["Row"];
 export type BillingEvent = Tables["billing_events"]["Row"];
