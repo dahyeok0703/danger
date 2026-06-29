@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * ──────────────────────────────────────────────────────────────
+ *  디자인 토큰 (Single Source of Truth)
+ *  무드: 신뢰 · 차분 · 실무 / 톤: 딥 그린 + 뉴트럴 그레이 + 경고용 앰버
+ *  값은 HSL 채널만 적는다 (Tailwind 가 hsl(var(--x)) 로 감싼다).
+ * ──────────────────────────────────────────────────────────────
+ */
+@layer base {
+  :root {
+    /* 표면 / 텍스트 — 차분한 뉴트럴 그레이 */
+    --background: 0 0% 100%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* 브랜드 — 딥 그린 (신뢰·안정) */
+    --primary: 158 52% 24%;
+    --primary-foreground: 150 30% 98%;
+
+    /* 보조 표면 — 옅은 그린 그레이 */
+    --secondary: 160 18% 94%;
+    --secondary-foreground: 158 40% 20%;
+
+    /* 약한 텍스트 / 배경 */
+    --muted: 210 16% 95%;
+    --muted-foreground: 215 14% 42%;
+
+    /* 강조 (호버 등) */
+    --accent: 160 24% 92%;
+    --accent-foreground: 158 40% 20%;
+
+    /* 경고 — 앰버 (주의·확인 필요 상태 전용) */
+    --warning: 38 92% 50%;
+    --warning-foreground: 30 60% 16%;
+
+    /* 완료 / 안전 상태 */
+    --success: 152 56% 34%;
+    --success-foreground: 150 30% 98%;
+
+    /* 위험 / 삭제 */
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* 경계 / 입력 / 포커스 링 */
+    --border: 214 18% 88%;
+    --input: 214 18% 86%;
+    --ring: 158 52% 30%;
+
+    /* 모서리 둥글기 */
+    --radius: 0.625rem;
+    /* --font-sans 는 next/font(Noto Sans KR) 가 <html> 에 주입한다. */
+  }
+
+  .dark {
+    --background: 215 28% 9%;
+    --foreground: 210 20% 96%;
+    --card: 215 26% 12%;
+    --card-foreground: 210 20% 96%;
+    --popover: 215 26% 12%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 152 46% 45%;
+    --primary-foreground: 158 40% 10%;
+
+    --secondary: 215 20% 18%;
+    --secondary-foreground: 210 20% 96%;
+
+    --muted: 215 20% 18%;
+    --muted-foreground: 215 14% 65%;
+
+    --accent: 215 20% 20%;
+    --accent-foreground: 210 20% 96%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 30 60% 12%;
+
+    --success: 152 50% 45%;
+    --success-foreground: 158 40% 10%;
+
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 18% 24%;
+    --input: 215 18% 26%;
+    --ring: 152 46% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    /* 현장에서 폰으로 — 큰 기본 글씨 */
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* 터치 타깃 가독성: 폼 요소 기본 글씨 키움 (모바일 줌 방지 포함) */
+  input,
+  textarea,
+  select,
+  button {
+    font-size: 1rem;
+  }
+}
