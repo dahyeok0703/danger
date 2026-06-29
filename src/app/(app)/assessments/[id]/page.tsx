@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { getCurrentContext } from "@/lib/auth";
+import { isAiEnabled } from "@/lib/env.server";
 import { createClient } from "@/lib/supabase/server";
 import { AssessmentDisclaimer } from "@/components/assessment-disclaimer";
 import { AssessmentEditor, type EditorAssessment, type RevisionRow } from "./assessment-editor";
@@ -106,6 +107,7 @@ export default async function AssessmentDetailPage({
         items={items}
         revisions={revisions}
         canManage={canManage}
+        aiEnabled={isAiEnabled()}
       />
     </div>
   );

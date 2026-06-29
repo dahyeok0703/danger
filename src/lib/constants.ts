@@ -18,6 +18,10 @@ export const DISCLAIMER_LONG =
 export const ASSESSMENT_DISCLAIMER =
   "위험도 판단과 최종 책임은 사업주에게 있으며, 본 도구는 작성을 보조합니다. 가능성·중대성·위험성은 사업주가 직접 선택한 값입니다.";
 
+/** AI 예시 기능 고정 문구 (★ AI 는 예시 제공만, 위험도·법 판정 금지) */
+export const AI_SUGGESTION_DISCLAIMER =
+  "AI가 제시한 예시입니다. 실제 해당 여부와 위험도는 사업주가 직접 판단합니다. AI는 위험도·법 충족 여부를 판정하지 않습니다.";
+
 /** 멤버 역할 표시명 */
 export const ROLE_LABELS: Record<MemberRole, string> = {
   owner: "대표",

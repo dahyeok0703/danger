@@ -113,6 +113,8 @@ supabase test db      # supabase/tests/*.test.sql (pgTAP) 실행
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon(public) 키. 브라우저 노출 가능, RLS 로 보호 |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | 서비스 기본 URL. 이메일 인증 콜백에 사용 (로컬: `http://localhost:3000`) |
 | `SUPABASE_SERVICE_ROLE_KEY` | ⬜ | 서버 전용 관리 키. **절대 클라이언트 노출 금지**. 현재 골격 미사용 |
+| `ANTHROPIC_API_KEY` | ⬜ | AI '위험요인 예시' 기능용. 없으면 기능 비활성(수동 입력만), 앱은 정상 |
+| `USD_TO_KRW` | ⬜ | AI 원가(KRW) 환산 환율. 기본 1400 |
 
 환경변수는 시작 시 `src/lib/env.ts` 에서 **zod 로 검증**합니다. 값이 빠지면 명확한 오류로 멈춥니다.
 
@@ -164,6 +166,17 @@ middleware.ts     세션 갱신 + 라우트 보호
   단, 주기는 '법적 의무 보증이 아닌 일반 안내'임을 명시.
 - ★ 모든 평가 화면에 고정 문구 "위험도 판단과 최종 책임은 사업주에게 있으며 본 도구는 작성을 보조합니다".
   **시스템/AI 는 위험도를 '높음/낮음'으로 자동 판정하지 않습니다.**
+
+## AI 위험요인 예시 (선택 기능)
+
+- **`/api/suggest-hazards`**: 작업/공정 설명을 보내면 Claude(**Haiku 4.5** 고정, 저신뢰·실패 시
+  **Sonnet 4.6** 1회 폴백)가 "일반적으로 거론되는 유해위험요인 **예시**"를 JSON only 로 생성.
+  고정 시스템 프롬프트는 prompt caching 으로 캐시.
+- ★ **AI는 예시 제공만** 합니다. 출력 스키마에 위험도·등급·가능성·중대성·법 충족 여부가 **없으며**,
+  모델에게도 위험도·법 판정을 금지합니다. 채택·수정·삭제는 **사용자가 직접**(자동 적용 안 함).
+- **마진 보호**: 호출 후 `ai_usage` 에 토큰/원가(`lib/pricing/cogs.ts`)를 적재하고, **free 플랜 월 횟수
+  쿼터**(`ai_quota_status`)를 초과하면 수동 입력으로 유도합니다.
+- **`ANTHROPIC_API_KEY` 가 없으면** AI 예시 버튼이 숨겨지고 수동 입력만 동작합니다(앱 정상).
 
 ## 구현된 흐름
 

@@ -498,6 +498,20 @@ export interface Database {
         };
         Returns: string;
       };
+      ai_quota_status: {
+        Args: { p_workspace_id: string };
+        Returns: { plan: string; used: number; limit: number; allowed: boolean }[];
+      };
+      record_ai_usage: {
+        Args: {
+          p_workspace_id: string;
+          p_input_tokens: number;
+          p_output_tokens: number;
+          p_cost_krw: number;
+          p_doc_count?: number;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
       member_role: MemberRole;

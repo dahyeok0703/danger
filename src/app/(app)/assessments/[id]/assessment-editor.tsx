@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { HazardSuggestDialog } from "./hazard-suggest-dialog";
 import { ItemCard, type EditorItem } from "./item-card";
 
 export interface EditorAssessment {
@@ -34,11 +35,13 @@ export function AssessmentEditor({
   items,
   revisions,
   canManage,
+  aiEnabled,
 }: {
   assessment: EditorAssessment;
   items: EditorItem[];
   revisions: RevisionRow[];
   canManage: boolean;
+  aiEnabled: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -156,23 +159,36 @@ export function AssessmentEditor({
       {/* 위험요인 추가 */}
       {!readOnly && (
         <Card>
-          <CardContent className="flex gap-2 py-4">
-            <Input
-              value={newHazard}
-              onChange={(e) => setNewHazard(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addItem();
-                }
-              }}
-              placeholder="위험요인을 입력하고 추가 (예: 회전체에 손 끼임)"
-              aria-label="새 위험요인"
-            />
-            <Button variant="secondary" onClick={addItem} disabled={isPending}>
-              <Plus className="h-4 w-4" />
-              추가
-            </Button>
+          <CardContent className="space-y-3 py-4">
+            <div className="flex gap-2">
+              <Input
+                value={newHazard}
+                onChange={(e) => setNewHazard(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addItem();
+                  }
+                }}
+                placeholder="위험요인을 입력하고 추가 (예: 회전체에 손 끼임)"
+                aria-label="새 위험요인"
+              />
+              <Button variant="secondary" onClick={addItem} disabled={isPending}>
+                <Plus className="h-4 w-4" />
+                추가
+              </Button>
+            </div>
+            {aiEnabled && (
+              <div className="flex items-center gap-2 border-t pt-3">
+                <HazardSuggestDialog
+                  assessmentId={assessment.id}
+                  defaultDescription={assessment.worksiteName}
+                />
+                <span className="text-xs text-muted-foreground">
+                  떠오르지 않으면 예시를 참고하세요 (직접 채택·수정)
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
