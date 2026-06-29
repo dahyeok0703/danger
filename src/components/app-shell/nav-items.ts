@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import {
+  CalendarClock,
   ClipboardCheck,
   FileText,
   LayoutDashboard,
@@ -35,6 +36,12 @@ export const NAV_ITEMS: NavItem[] = [
     label: "위험성평가",
     hint: "우리 일터의 위험을 찾고 기록",
     icon: ClipboardCheck,
+  },
+  {
+    href: "/schedule",
+    label: "일정",
+    hint: "법정 주기 일정·알림",
+    icon: CalendarClock,
   },
   {
     href: "/records",

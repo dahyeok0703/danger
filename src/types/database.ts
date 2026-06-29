@@ -17,6 +17,8 @@ export type SafetyRecordType = "education" | "inspection" | "meeting" | "improve
 export type DocumentKind = "assessment_table" | "safety_policy" | "checklist" | "other";
 export type ReminderTarget = "assessment" | "record";
 export type ReminderStatus = "pending" | "done";
+export type ReminderRecurrence = "none" | "monthly" | "quarterly" | "semiannual" | "annual";
+export type ScheduleCategory = "risk_assessment" | "inspection" | "education" | "other";
 export type InvitationStatus = "pending" | "accepted" | "revoked";
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
@@ -305,21 +307,29 @@ export interface Database {
         Row: {
           id: string;
           workspace_id: string;
-          target: ReminderTarget;
+          target: ReminderTarget | null;
           target_id: string | null;
           due_on: string;
           status: ReminderStatus;
           label: string | null;
+          recurrence: ReminderRecurrence;
+          category: ScheduleCategory;
+          completed_at: string | null;
+          notified_at: string | null;
         } & Timestamps &
           SoftDelete;
         Insert: {
           id?: string;
           workspace_id: string;
-          target: ReminderTarget;
+          target?: ReminderTarget | null;
           target_id?: string | null;
           due_on: string;
           status?: ReminderStatus;
           label?: string | null;
+          recurrence?: ReminderRecurrence;
+          category?: ScheduleCategory;
+          completed_at?: string | null;
+          notified_at?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
@@ -516,6 +526,23 @@ export interface Database {
         };
         Returns: undefined;
       };
+      due_reminder_notifications: {
+        Args: { p_within_days?: number };
+        Returns: {
+          reminder_id: string;
+          workspace_id: string;
+          workspace_name: string;
+          label: string;
+          category: ScheduleCategory;
+          due_on: string;
+          days_left: number;
+          recipient_email: string;
+        }[];
+      };
+      mark_reminders_notified: {
+        Args: { p_ids: string[] };
+        Returns: number;
+      };
     };
     Enums: {
       member_role: MemberRole;
@@ -528,6 +555,8 @@ export interface Database {
       document_kind: DocumentKind;
       reminder_target: ReminderTarget;
       reminder_status: ReminderStatus;
+      reminder_recurrence: ReminderRecurrence;
+      schedule_category: ScheduleCategory;
       invitation_status: InvitationStatus;
     };
     CompositeTypes: Record<never, never>;

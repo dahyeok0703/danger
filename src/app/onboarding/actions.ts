@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { action, ActionError, parseInput } from "@/lib/action";
 import { getCurrentContext } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { defaultScheduleRows } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/server";
 import { onboardingSchema } from "@/lib/validations/onboarding";
 
@@ -46,6 +47,12 @@ export const completeOnboarding = action(async (input: unknown) => {
       throw new ActionError("작업장소를 저장하지 못했어요. 설정에서 다시 추가할 수 있어요.");
     }
   }
+
+  // 표준 법정 주기 일정 자동 생성 (정기 위험성평가/반기 점검/정기 교육)
+  const { error: schedError } = await supabase
+    .from("reminders")
+    .insert(defaultScheduleRows(workspace.id));
+  if (schedError) console.error("[onboarding] 표준 일정 생성 실패:", schedError.message);
 
   await logAudit(supabase, {
     workspaceId: workspace.id,

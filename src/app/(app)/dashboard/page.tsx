@@ -4,6 +4,7 @@ import { CalendarClock, ClipboardCheck, ListChecks, Plus } from "lucide-react";
 
 import { getCurrentContext } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/constants";
+import { SCHEDULE_DISCLAIMER } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/server";
 import type { Reminder } from "@/types/database";
 import { cn } from "@/lib/utils";
@@ -100,8 +101,11 @@ export default async function DashboardPage() {
 
       {/* 임박한 점검 목록 */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base">다가오는 일정</CardTitle>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/schedule">전체 일정</Link>
+          </Button>
         </CardHeader>
         <CardContent>
           {upcoming.length === 0 ? (
@@ -136,6 +140,7 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
+      <p className="text-xs text-muted-foreground">{SCHEDULE_DISCLAIMER}</p>
       <p className="text-xs text-muted-foreground">
         위험도 산정과 법적합성 판단은 사업주가 직접 하며, 본 도구는 작성·기록만 돕습니다.
       </p>

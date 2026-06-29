@@ -270,6 +270,7 @@ export const completeAssessment = action(async (input: unknown) => {
       workspace_id: workspace.id,
       target: "assessment",
       target_id: assessmentId,
+      category: "risk_assessment",
       due_on: nextDue,
       status: "pending",
       label: "정기 위험성평가 점검",
