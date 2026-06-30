@@ -8,7 +8,32 @@
 > 시스템이나 AI 가 위험도를 판정하지 않습니다. 법령 내용은 KOSHA 자료를 참고하되
 > 정확한 적용은 전문가 검수가 필요합니다.
 
-현재 단계: **기능 없는 프로덕션 골격** (인증/멀티테넌시/앱 셸까지).
+현재 단계: **기능 완성 + 공개 페이지·결제·배포 준비** — 출시 전 체크리스트는 [`LAUNCH.md`](./LAUNCH.md) 참고.
+
+## ⚡ 5분 셋업 (로컬)
+
+```bash
+# 1) 의존성
+pnpm install
+
+# 2) 환경변수 — .env.example 복사 후 Supabase 값 3개만 채우면 일단 실행됨
+cp .env.example .env.local
+#   NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY / NEXT_PUBLIC_SITE_URL
+#   (AI·결제·이메일 키는 선택 — 없으면 해당 기능만 꺼지고 앱은 정상)
+
+# 3) DB — Supabase 프로젝트에 마이그레이션 적용 (0001→0008 순서)
+supabase link --project-ref <ref> && supabase db push
+#   로컬 스택을 쓰면: supabase start  (seed.sql 의 데모 데이터까지 자동 로드)
+
+# 4) 실행
+pnpm dev            # http://localhost:3000
+
+# 5) 출시 전이라면
+pnpm launch:check   # 출시 가능 자가점검 (GO / NO-GO)
+```
+
+> 키가 없을 때 동작: **AI 예시**(ANTHROPIC_API_KEY 없음)→버튼 숨김·수동 입력만,
+> **결제**(PORTONE_* 없음)→'준비중' 비활성, **이메일 알림**(RESEND 없음)→인앱만. 앱은 항상 정상 동작.
 
 ## 기술 스택
 
@@ -140,9 +165,10 @@ supabase gen types typescript --project-id <ref> > src/types/database.ts  # 원�
 pnpm dev         # 개발 서버
 pnpm build       # 프로덕션 빌드
 pnpm start       # 빌드 결과 실행
-pnpm typecheck   # 타입 검사 (strict)
-pnpm lint        # ESLint
-pnpm format      # Prettier 포맷
+pnpm typecheck    # 타입 검사 (strict)
+pnpm lint         # ESLint
+pnpm format       # Prettier 포맷
+pnpm launch:check # 출시 가능 자가점검 (GO / NO-GO)
 ```
 
 ## 프로젝트 구조

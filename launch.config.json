@@ -1,0 +1,13 @@
+{
+  "_comment": "출시 게이트 플래그. 각 항목을 실제로 완료한 뒤에만 true 로 바꾼다. ★ blocker 가 하나라도 false 이면 'pnpm launch:check' 가 '출시 불가(NO-GO)'를 반환한다.",
+  "_docs": "LAUNCH.md 참고. 거짓으로 true 표시 금지 — 자가점검의 신뢰가 무너진다.",
+  "gates": {
+    "expertReviewComplete": false,
+    "legalReviewComplete": false,
+    "paymentLiveTested": false,
+    "demoDataRemoved": false,
+    "marginQuotaVerified": false,
+    "productionEnvConfigured": false,
+    "cronRegistered": false
+  }
+}
