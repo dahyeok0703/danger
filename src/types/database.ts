@@ -20,6 +20,7 @@ export type ReminderStatus = "pending" | "done";
 export type ReminderRecurrence = "none" | "monthly" | "quarterly" | "semiannual" | "annual";
 export type ScheduleCategory = "risk_assessment" | "inspection" | "education" | "other";
 export type InvitationStatus = "pending" | "accepted" | "revoked";
+export type SubscriptionStatus = "none" | "active" | "canceled" | "past_due";
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -519,6 +520,7 @@ export interface Database {
           workspace_id: string;
           type: string;
           raw: Json | null;
+          event_key: string | null;
           created_at: string;
         };
         Insert: {
@@ -526,12 +528,54 @@ export interface Database {
           workspace_id: string;
           type: string;
           raw?: Json | null;
+          event_key?: string | null;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["billing_events"]["Insert"]>;
         Relationships: [
           {
             foreignKeyName: "billing_events_workspace_id_fkey";
+            columns: ["workspace_id"];
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      subscriptions: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          plan: PlanTier;
+          status: SubscriptionStatus;
+          billing_key: string | null;
+          customer_key: string | null;
+          amount_krw: number | null;
+          currency: string;
+          current_period_start: string | null;
+          current_period_end: string | null;
+          cancel_at_period_end: boolean;
+          last_payment_id: string | null;
+        } & Timestamps;
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          plan?: PlanTier;
+          status?: SubscriptionStatus;
+          billing_key?: string | null;
+          customer_key?: string | null;
+          amount_krw?: number | null;
+          currency?: string;
+          current_period_start?: string | null;
+          current_period_end?: string | null;
+          cancel_at_period_end?: boolean;
+          last_payment_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["subscriptions"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_workspace_id_fkey";
             columns: ["workspace_id"];
             referencedRelation: "workspaces";
             referencedColumns: ["id"];
@@ -619,3 +663,4 @@ export type AssessmentRevision = Tables["assessment_revisions"]["Row"];
 export type AiUsage = Tables["ai_usage"]["Row"];
 export type AuditLog = Tables["audit_logs"]["Row"];
 export type BillingEvent = Tables["billing_events"]["Row"];
+export type Subscription = Tables["subscriptions"]["Row"];

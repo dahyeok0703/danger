@@ -1,6 +1,6 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 
-import { DocFooter, DocHeader, SignatureRow, WorkspaceInfo } from "../components";
+import { DocFooter, DocHeader, SignatureRow, Watermark, WorkspaceInfo } from "../components";
 import { styles } from "../styles";
 import type { SafetyReportDocData } from "../types";
 
@@ -8,10 +8,17 @@ import type { SafetyReportDocData } from "../types";
  * 안전활동 기록부 (기간별 내보내기 — 점검 대비 자료 묶음).
  * ★ 기록은 사업주가 입력한 사실의 보관이며, 그 적정성을 보증하지 않는다.
  */
-export function SafetyRecordsReportDoc({ data }: { data: SafetyReportDocData }) {
+export function SafetyRecordsReportDoc({
+  data,
+  watermark,
+}: {
+  data: SafetyReportDocData;
+  watermark?: boolean;
+}) {
   return (
     <Document title={`안전활동 기록부 - ${data.workspace.name}`}>
       <Page size="A4" style={styles.page}>
+        {watermark && <Watermark />}
         <DocHeader title="안전활동 기록부" workspace={data.workspace} />
         <WorkspaceInfo workspace={data.workspace} />
 

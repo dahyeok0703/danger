@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { LogOut, Settings, UserRound } from "lucide-react";
+import { CreditCard, LogOut, Settings, UserRound } from "lucide-react";
 import { toast } from "sonner";
 
 import { signOut } from "@/app/(auth)/actions";
@@ -67,6 +67,10 @@ export function UserMenu({
         <DropdownMenuItem onClick={() => router.push("/settings")}>
           <Settings className="text-muted-foreground" />
           설정
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/billing")}>
+          <CreditCard className="text-muted-foreground" />
+          구독·결제
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

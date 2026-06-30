@@ -1,6 +1,7 @@
 import { logAudit } from "@/lib/audit";
 import { MeetingMinutesDoc, SafetyChecklistDoc } from "@/lib/pdf/documents/aux";
 import { SafetyPolicyDoc } from "@/lib/pdf/documents/policy";
+import { planWatermark } from "@/lib/plan";
 import { renderPdf } from "@/lib/pdf/render";
 import { pdfResponse } from "@/lib/pdf/respond";
 import type { AuxDocKind, DocWorkspace } from "@/lib/pdf/types";
@@ -54,12 +55,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ kind: st
     logoUrl: ws.logo_url,
   };
 
+  const watermark = planWatermark(ws.plan);
   const element =
     kind === "policy"
-      ? SafetyPolicyDoc({ workspace })
+      ? SafetyPolicyDoc({ workspace, watermark })
       : kind === "checklist"
-        ? SafetyChecklistDoc({ workspace })
-        : MeetingMinutesDoc({ workspace });
+        ? SafetyChecklistDoc({ workspace, watermark })
+        : MeetingMinutesDoc({ workspace, watermark });
 
   const bytes = await renderPdf(element);
 

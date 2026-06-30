@@ -118,6 +118,9 @@ supabase test db      # supabase/tests/*.test.sql (pgTAP) 실행
 | `CRON_SECRET` | ⬜ | `/api/cron/*` 보호. Vercel Cron 사용 시 자동 첨부 |
 | `SUPABASE_SERVICE_ROLE_KEY` | ⬜ | 크론이 전 워크스페이스를 스캔(RLS 우회)할 때만 사용 |
 | `RESEND_API_KEY` / `EMAIL_FROM` | ⬜ | 이메일 알림 발송(Resend). 둘 다 있을 때만 발송 |
+| `NEXT_PUBLIC_PRO_PRICE_KRW` | ⬜ | 프로 월 구독가(원). 기본 49,000. 마진은 `src/lib/pricing/cogs.ts` 로 검증 |
+| `PORTONE_API_SECRET` / `PORTONE_STORE_ID` / `PORTONE_CHANNEL_KEY` | ⬜ | PortOne 결제. **셋 다 있어야** 결제가 켜짐. 없으면 결제 '준비중'(앱 정상) |
+| `PORTONE_WEBHOOK_SECRET` | ⬜ | `/api/webhooks/portone` 서명 검증용(`whsec_…`) |
 
 환경변수는 시작 시 `src/lib/env.ts` 에서 **zod 로 검증**합니다. 값이 빠지면 명확한 오류로 멈춥니다.
 
@@ -220,6 +223,19 @@ middleware.ts     세션 갱신 + 라우트 보호
 - **마진 보호**: 호출 후 `ai_usage` 에 토큰/원가(`lib/pricing/cogs.ts`)를 적재하고, **free 플랜 월 횟수
   쿼터**(`ai_quota_status`)를 초과하면 수동 입력으로 유도합니다.
 - **`ANTHROPIC_API_KEY` 가 없으면** AI 예시 버튼이 숨겨지고 수동 입력만 동작합니다(앱 정상).
+
+## 구독 결제 (PortOne 빌링키 정기결제)
+
+- **플랜**: `free`(작업장소 2개·AI 월 10회·산출물 **워터마크**·알림 없음) / `pro`(작업장소 무제한·AI
+  넉넉·워터마크 없음·이메일 알림·기간 내보내기). 한도 단일 출처는 `src/lib/billing/plans.ts`,
+  실제 게이팅은 DB(`ai_monthly_limit`)·RLS(`due_reminder_notifications` 가 pro 만 알림)·코드(`lib/plan.ts`)가 함께 적용.
+- **어댑터 분리**(`src/lib/billing/`): `BillingAdapter` 인터페이스 + PortOne V2 REST 구현. PG 교체 시 어댑터만 갈아끼움.
+- **`/pricing`**(공개 가격표) · **`/billing`**(대표 전용): 브라우저 SDK 로 **빌링키 발급 → server action 으로
+  서버가 결제**(빌링키는 클라이언트로 다시 내려보내지 않음). 해지 예약/재개, 결제 내역, **이번 달 AI 원가·마진 점검** 노출.
+- **웹훅**(`/api/webhooks/portone`): Standard Webhooks **HMAC-SHA256 서명 검증** + `billing_events.event_key`
+  **멱등 처리**(재전송 무시). **정기결제 갱신 크론**(`/api/cron/billing`): 주기 만료분 재청구, 해지분 free 강등.
+- **`PORTONE_*` 키가 없으면** 결제 버튼이 **'준비중'으로 비활성**화되고 앱은 정상 동작합니다.
+- ★ 어떤 플랜도 **안전을 보증하지 않습니다.** 작성·기록 보조 범위의 **기능 차이**만 안내합니다.
 
 ## 구현된 흐름
 

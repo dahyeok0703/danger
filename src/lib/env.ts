@@ -11,6 +11,8 @@ const clientSchema = z.object({
     .string()
     .min(1, "NEXT_PUBLIC_SUPABASE_ANON_KEY 가 비어 있습니다."),
   NEXT_PUBLIC_SITE_URL: z.string().url("NEXT_PUBLIC_SITE_URL 은 올바른 URL 이어야 합니다."),
+  // pro 월 구독가(원). 설정값. 미설정 시 기본 49,000원. (cogs 로 마진 검증)
+  NEXT_PUBLIC_PRO_PRICE_KRW: z.coerce.number().int().positive().default(49000),
 });
 
 /**
@@ -22,6 +24,7 @@ function buildEnv() {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_PRO_PRICE_KRW: process.env.NEXT_PUBLIC_PRO_PRICE_KRW,
   });
 
   if (!parsed.success) {

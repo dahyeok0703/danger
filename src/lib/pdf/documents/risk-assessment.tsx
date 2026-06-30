@@ -1,6 +1,6 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 
-import { DocFooter, DocHeader, SignatureRow, WorkspaceInfo } from "../components";
+import { DocFooter, DocHeader, SignatureRow, Watermark, WorkspaceInfo } from "../components";
 import { ASSESSMENT_COLS, styles } from "../styles";
 import type { RiskAssessmentDocData } from "../types";
 
@@ -9,13 +9,20 @@ import type { RiskAssessmentDocData } from "../types";
  * ★ 가능성·중대성·위험성은 사용자가 직접 선택한 값을 그대로 표기한다(시스템 산정 아님).
  * ⚠️ 양식의 법적 정확성은 출시 전 산업안전 전문가 검수가 필요하다.
  */
-export function RiskAssessmentDoc({ data }: { data: RiskAssessmentDocData }) {
+export function RiskAssessmentDoc({
+  data,
+  watermark,
+}: {
+  data: RiskAssessmentDocData;
+  watermark?: boolean;
+}) {
   const c = ASSESSMENT_COLS;
   const v = (n: number | null) => (n != null ? String(n) : "");
 
   return (
     <Document title={`위험성평가표 - ${data.workspace.name}`}>
       <Page size="A4" orientation="landscape" style={styles.page}>
+        {watermark && <Watermark />}
         <DocHeader title="위험성평가표" workspace={data.workspace} />
         <WorkspaceInfo workspace={data.workspace} />
 

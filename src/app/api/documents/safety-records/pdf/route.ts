@@ -1,6 +1,7 @@
 import { SAFETY_RECORD_TYPE_LABELS } from "@/lib/constants";
 import { logAudit } from "@/lib/audit";
 import { SafetyRecordsReportDoc } from "@/lib/pdf/documents/safety-records-report";
+import { planWatermark } from "@/lib/plan";
 import { renderPdf } from "@/lib/pdf/render";
 import { pdfResponse } from "@/lib/pdf/respond";
 import type { DocWorkspace, SafetyReportRow } from "@/lib/pdf/types";
@@ -95,7 +96,12 @@ export async function GET(req: Request) {
     attachmentCount: counts.get(r.id) ?? 0,
   }));
 
-  const bytes = await renderPdf(SafetyRecordsReportDoc({ data: { workspace, fromDate: from, toDate: to, rows } }));
+  const bytes = await renderPdf(
+    SafetyRecordsReportDoc({
+      watermark: planWatermark(ws.plan),
+      data: { workspace, fromDate: from, toDate: to, rows },
+    }),
+  );
 
   const download = url.searchParams.get("download") === "1";
   await logAudit(supabase, {

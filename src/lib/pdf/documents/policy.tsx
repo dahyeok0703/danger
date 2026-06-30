@@ -1,6 +1,6 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 
-import { DocFooter, DocHeader, SignatureRow, today } from "../components";
+import { DocFooter, DocHeader, SignatureRow, today, Watermark } from "../components";
 import { styles } from "../styles";
 import type { DocWorkspace } from "../types";
 
@@ -9,11 +9,18 @@ import type { DocWorkspace } from "../types";
  * ⚠️ 아래 문구는 KOSHA 공개 자료를 참고한 '표준 예시'다. 대괄호[ ] 플레이스홀더를
  *    사업장 실정에 맞게 채우고, 출시/사용 전 산업안전 전문가의 검수를 받아야 한다.
  */
-export function SafetyPolicyDoc({ workspace }: { workspace: DocWorkspace }) {
+export function SafetyPolicyDoc({
+  workspace,
+  watermark,
+}: {
+  workspace: DocWorkspace;
+  watermark?: boolean;
+}) {
   const name = workspace.name;
   return (
     <Document title={`안전보건 경영방침 - ${name}`}>
       <Page size="A4" style={styles.page}>
+        {watermark && <Watermark />}
         <DocHeader title="안전보건 목표 및 경영방침" workspace={workspace} />
 
         <Text style={styles.para}>

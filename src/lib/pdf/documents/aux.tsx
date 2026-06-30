@@ -1,6 +1,6 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 
-import { DocFooter, DocHeader, SignatureRow, WorkspaceInfo } from "../components";
+import { DocFooter, DocHeader, SignatureRow, Watermark, WorkspaceInfo } from "../components";
 import { styles } from "../styles";
 import type { DocWorkspace } from "../types";
 
@@ -12,10 +12,17 @@ import type { DocWorkspace } from "../types";
 const EMPTY_ROWS = Array.from({ length: 10 }, (_, i) => i + 1);
 
 /** 안전점검표 — 점검 항목/결과/조치 빈칸 서식 */
-export function SafetyChecklistDoc({ workspace }: { workspace: DocWorkspace }) {
+export function SafetyChecklistDoc({
+  workspace,
+  watermark,
+}: {
+  workspace: DocWorkspace;
+  watermark?: boolean;
+}) {
   return (
     <Document title={`안전점검표 - ${workspace.name}`}>
       <Page size="A4" style={styles.page}>
+        {watermark && <Watermark />}
         <DocHeader title="안전·보건 점검표" workspace={workspace} />
         <WorkspaceInfo workspace={workspace} />
 
@@ -49,7 +56,13 @@ export function SafetyChecklistDoc({ workspace }: { workspace: DocWorkspace }) {
 }
 
 /** 안전보건 회의록 — 참석/안건/결정사항 빈칸 서식 */
-export function MeetingMinutesDoc({ workspace }: { workspace: DocWorkspace }) {
+export function MeetingMinutesDoc({
+  workspace,
+  watermark,
+}: {
+  workspace: DocWorkspace;
+  watermark?: boolean;
+}) {
   const lines = (label: string, count: number) => (
     <View style={{ marginBottom: 8 }}>
       <Text style={styles.sectionTitle}>{label}</Text>
@@ -62,6 +75,7 @@ export function MeetingMinutesDoc({ workspace }: { workspace: DocWorkspace }) {
   return (
     <Document title={`안전보건 회의록 - ${workspace.name}`}>
       <Page size="A4" style={styles.page}>
+        {watermark && <Watermark />}
         <DocHeader title="안전·보건 회의록" workspace={workspace} />
 
         <View style={styles.infoGrid}>

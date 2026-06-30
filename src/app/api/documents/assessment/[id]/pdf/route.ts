@@ -1,6 +1,7 @@
 import { ASSESSMENT_STATUS_LABELS, ASSESSMENT_TYPE_LABELS } from "@/lib/risk";
 import { logAudit } from "@/lib/audit";
 import { RiskAssessmentDoc } from "@/lib/pdf/documents/risk-assessment";
+import { planWatermark } from "@/lib/plan";
 import { renderPdf } from "@/lib/pdf/render";
 import { pdfResponse } from "@/lib/pdf/respond";
 import type { DocWorkspace, RiskAssessmentRow } from "@/lib/pdf/types";
@@ -95,6 +96,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
   const bytes = await renderPdf(
     RiskAssessmentDoc({
+      watermark: planWatermark(ws.plan),
       data: {
         workspace,
         worksiteName,

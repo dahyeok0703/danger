@@ -89,6 +89,19 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   pageNo: { position: "absolute", bottom: 12, right: 36, fontSize: 7, color: "#aaa" },
+
+  // 무료 플랜 워터마크 (대각선, 옅게)
+  watermark: {
+    position: "absolute",
+    top: "45%",
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    fontSize: 54,
+    color: "#1f5f44",
+    opacity: 0.08,
+    transform: "rotate(-28deg)",
+  },
 });
 
 /** 위험성평가표 열 너비(합 100) */

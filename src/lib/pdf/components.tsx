@@ -76,6 +76,15 @@ export function DocFooter() {
   );
 }
 
+/** 무료 플랜 산출물 워터마크 (모든 페이지) */
+export function Watermark() {
+  return (
+    <Text style={styles.watermark} fixed>
+      무료 플랜
+    </Text>
+  );
+}
+
 export function today(): string {
   const d = new Date();
   const p = (n: number) => String(n).padStart(2, "0");

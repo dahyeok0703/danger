@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { action, ActionError, parseInput } from "@/lib/action";
 import { getCurrentContext } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { assertWorksiteWithinQuota } from "@/lib/plan";
 import { createClient } from "@/lib/supabase/server";
 import {
   worksiteCreateSchema,
@@ -24,6 +25,9 @@ export const createWorksite = action(async (input: unknown) => {
   assertManager(member.role);
 
   const supabase = await createClient();
+  // 플랜 한도(작업장소 수) 검사 — free 제한
+  await assertWorksiteWithinQuota(supabase, workspace.id, workspace.plan);
+
   const { data, error } = await supabase
     .from("worksites")
     .insert({ workspace_id: workspace.id, name, description: description || null })
