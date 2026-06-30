@@ -22,6 +22,10 @@ export const ASSESSMENT_DISCLAIMER =
 export const AI_SUGGESTION_DISCLAIMER =
   "AI가 제시한 예시입니다. 실제 해당 여부와 위험도는 사업주가 직접 판단합니다. AI는 위험도·법 충족 여부를 판정하지 않습니다.";
 
+/** ★ 대시보드(이행 현황) 고정 문구 — 안전·법 충족 보증이 아님 */
+export const COMPLIANCE_DISCLAIMER =
+  "이 화면은 작성·기록의 '이행 현황'을 보여줄 뿐이며, 사업장의 안전이나 법적 충족 여부를 보증하지 않습니다.";
+
 /** 안전활동 기록 유형 라벨 */
 export const SAFETY_RECORD_TYPE_LABELS: Record<
   "education" | "inspection" | "meeting" | "improvement",
