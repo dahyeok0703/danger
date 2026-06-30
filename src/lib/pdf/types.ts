@@ -35,3 +35,20 @@ export interface RiskAssessmentDocData {
 }
 
 export type AuxDocKind = "policy" | "checklist" | "meeting";
+
+export interface SafetyReportRow {
+  recordedOn: string;
+  typeLabel: string;
+  title: string;
+  worksiteName: string;
+  participants: string;
+  memo: string;
+  attachmentCount: number;
+}
+
+export interface SafetyReportDocData {
+  workspace: DocWorkspace;
+  fromDate: string;
+  toDate: string;
+  rows: SafetyReportRow[];
+}

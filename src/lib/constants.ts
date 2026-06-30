@@ -22,6 +22,21 @@ export const ASSESSMENT_DISCLAIMER =
 export const AI_SUGGESTION_DISCLAIMER =
   "AI가 제시한 예시입니다. 실제 해당 여부와 위험도는 사업주가 직접 판단합니다. AI는 위험도·법 충족 여부를 판정하지 않습니다.";
 
+/** 안전활동 기록 유형 라벨 */
+export const SAFETY_RECORD_TYPE_LABELS: Record<
+  "education" | "inspection" | "meeting" | "improvement",
+  string
+> = {
+  education: "안전교육",
+  inspection: "순회점검",
+  meeting: "회의",
+  improvement: "개선조치",
+};
+
+/** ★ 안전활동 기록 고정 문구 */
+export const SAFETY_RECORD_DISCLAIMER =
+  "안전활동 기록은 사업주가 입력한 사실을 보관하는 것이며, 본 도구는 그 내용의 적정성이나 법적 충분성을 보증하지 않습니다.";
+
 /**
  * ★ 산출물(PDF) 하단 고정 주석.
  * 양식은 KOSHA 공개 표준을 참고했으나, 법적 정확성은 출시 전 산업안전 전문가 검수가 필요하다.

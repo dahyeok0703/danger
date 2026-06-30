@@ -248,6 +248,9 @@ export interface Database {
           recorded_on: string | null;
           file_path: string | null;
           memo: string | null;
+          worksite_id: string | null;
+          assessment_id: string | null;
+          participants: string | null;
         } & Timestamps &
           SoftDelete;
         Insert: {
@@ -258,6 +261,9 @@ export interface Database {
           recorded_on?: string | null;
           file_path?: string | null;
           memo?: string | null;
+          worksite_id?: string | null;
+          assessment_id?: string | null;
+          participants?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
@@ -268,6 +274,39 @@ export interface Database {
             foreignKeyName: "safety_records_workspace_id_fkey";
             columns: ["workspace_id"];
             referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      safety_record_attachments: {
+        Row: {
+          id: string;
+          workspace_id: string;
+          record_id: string;
+          path: string;
+          file_name: string;
+          mime_type: string | null;
+          size_bytes: number | null;
+          created_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          workspace_id: string;
+          record_id: string;
+          path: string;
+          file_name: string;
+          mime_type?: string | null;
+          size_bytes?: number | null;
+          created_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["safety_record_attachments"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "safety_record_attachments_record_id_fkey";
+            columns: ["record_id"];
+            referencedRelation: "safety_records";
             referencedColumns: ["id"];
           },
         ];
@@ -572,6 +611,7 @@ export type Hazard = Tables["hazards"]["Row"];
 export type RiskAssessment = Tables["risk_assessments"]["Row"];
 export type AssessmentItem = Tables["assessment_items"]["Row"];
 export type SafetyRecord = Tables["safety_records"]["Row"];
+export type SafetyRecordAttachment = Tables["safety_record_attachments"]["Row"];
 export type AppDocument = Tables["documents"]["Row"];
 export type Reminder = Tables["reminders"]["Row"];
 export type Invitation = Tables["invitations"]["Row"];
